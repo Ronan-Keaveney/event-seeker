@@ -1,0 +1,91 @@
+<div class="container-fluid mt-5">
+    <h3 class="mb-3 text-center">Your Favourites</h3>
+    <div class="row g-3 justify-content-center" *ngIf="favourites.length > 0; else noFavourites">
+        <div *ngFor="let fav of favourites" class="col-md-3 col-lg-2">
+            <div class="card h-100" (click)="showFavouriteDetails(fav)">
+                <ng-container *ngIf="fav?.images?.length>0; else defaultimage">
+                    <img onerror="this.src='../assets/tech.jpg'" [src]="fav?.images[0]?.url" class="card-img-top">
+                </ng-container>
+                <ng-template #defaultimage>
+                    <img src="../assets/tech.jpg" class="card-img-top">
+                </ng-template>
+                <div class="card-body">
+                    <h6 class="card-title"><b>{{fav?.name}}</b></h6>
+                </div>
+            </div>
+        </div>
+    </div>
+    <ng-template #noFavourites>
+        <div class="p-4 text-center">
+            <h6>No favourites added yet!</h6>
+        </div>
+    </ng-template>
+</div>
+
+
+    <div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="detailsLabel"> Details</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+    
+    
+    
+            <div class="modal-body">
+            <div class="text-center" *ngIf="showDetail?.images?.length>0  else other">
+                <img [src]="showDetail?.images[0]?.url" class="modal-img">
+    
+            </div>
+            <ng-template #other>
+                <img src="../assets/tech.jpg" alt="">
+            </ng-template>
+    
+    
+            <h3 class="text-center mt-2">{{showDetail?.name}}</h3>
+            <ng-container *ngIf="showDetail?.type=='event'">
+                <p class="pt-3">
+                <b> Start Date :  </b>   {{showDetail?.dates?.start?.localDate}}
+                </p>
+                <p class="pt-3">
+                <b> Venue :  </b>   {{showDetail?._embedded?.venues[0]?.address?.line1}} , {{showDetail?._embedded?.venues[0]?.city?.name}} , {{showDetail?._embedded?.venues[0]?.country?.name}}
+                </p>
+            </ng-container>
+            <ng-container *ngIf="showDetail?.type=='attraction'">
+                <p class="pt-3">
+                <b> Start Date :  </b>   {{showDetail?.dates?.start?.localDate}}
+                </p>
+                <p class="pt-3">
+                <b> Classifications :  </b>  <b>  Genre : </b> {{showDetail?.classifications[0]?.genre?.name}} ,<b>  Segment : </b> {{showDetail?.classifications[0]?.segment?.name}} ,  <b>  Sub-Genre : </b>  {{showDetail?.classifications[0]?.subGenre?.name}}
+                </p>
+            </ng-container>
+            <ng-container *ngIf="showDetail?.type=='venue'">
+                <p class="pt-3">
+                <b> Start Date :  </b>   {{showDetail?.dates?.start?.localDate}}
+                </p>
+                <p class="pt-3">
+                <b> Address :  </b>   {{showDetail?.address?.line1}} , {{showDetail?.city?.name}} , {{showDetail?.country?.name}}
+                </p>
+                <p class="pt-3">
+                <b> Parking Detail :  </b> {{showDetail?.parkingDetail}}
+                </p>
+                <p class="pt-3">
+                <b> Accessible Detail :  </b> {{showDetail?.accessibleSeatingDetail}}
+                </p>
+            </ng-container>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" (click)="deleteFavourite(showDetail.firestoreId)">Delete</button>
+            <ng-container *ngIf="showDetail?.url">
+                <a [href]="showDetail?.url" target="_blank"> <button class="btn btn-sm btn-primary"> View URL</button></a>
+            </ng-container>
+            <ng-container  *ngIf="showDetail?.type=='event'" >
+                <a [href]="showDetail?.seatmap?.staticUrl" target="_blank"> <button class="btn btn-sm btn-primary"> View  Seat Map</button> </a>
+            </ng-container>
+            <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+        </div>
+    </div>
+  

@@ -1,0 +1,176 @@
+    <ng-template #noresult>
+        <div class="p-4 text-center">
+            <h6>No Results Found</h6>
+        </div>
+    </ng-template>
+
+    <div class="container-fluid mt-5">
+        <div class="text-center mb-4">
+            <input #search class="form-control d-inline-block w-auto" type="search" placeholder="Search using keyword/country" aria-label="Search">
+            <button class="btn btn-outline-primary ms-2" type="button" (click)="onSearch(search.value)">Search</button>
+            <button class="btn btn-outline-secondary ms-2" type="button" (click)="getAllData(search)">Reset</button>
+        </div>
+  
+  
+    <button [hidden]="true" id="showmodal" data-bs-toggle="modal" data-bs-target="#details"></button>
+    <h3 class="mb-3 text-center">Events</h3>
+    <div class="row g-3 justify-content-center" *ngIf="allEvents?.length>0; else noresult">
+        <div *ngFor="let item of allEvents" class="col-md-3 col-lg-2">
+            <div class="card h-100" (click)="getEventById(item?.id)">
+                <ng-container *ngIf="item?.images?.length>0; else defaultimage">
+                    <img onerror="this.src='../assets/tech.jpg'" [src]="item?.images[0]?.url" class="card-img-top">
+                </ng-container>
+                <ng-template #defaultimage>
+                    <img src="../assets/tech.jpg" class="card-img-top">
+                </ng-template>
+                <div class="card-body">
+                    <h6 class="card-title"><b>{{item?.name}}</b></h6>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <hr class="my-4">
+  
+    <h3 class="mb-3 text-center">Attractions</h3>
+    <div class="row g-3 justify-content-center" *ngIf="allAttractions?.length>0; else noresult">
+        <div *ngFor="let item of allAttractions" class="col-md-3 col-lg-2">
+            <div class="card h-100" (click)="getAttractionById(item?.id)">
+                <ng-container *ngIf="item?.images?.length>0; else defaultimage">
+                    <img onerror="this.src='../assets/tech.jpg'" [src]="item?.images[0]?.url" class="card-img-top">
+                </ng-container>
+                <ng-template #defaultimage>
+                    <img src="../assets/tech.jpg" class="card-img-top">
+                </ng-template>
+                <div class="card-body">
+                    <h6 class="card-title"><b>{{item?.name}}</b></h6>
+                </div>
+            </div>
+        </div>
+    </div>
+  
+    <h3 class="mb-3 text-center">Venues</h3>
+    <div class="row g-3 justify-content-center" *ngIf="allVenues?.length>0; else noresult">
+        <div *ngFor="let item of allVenues" class="col-md-3 col-lg-2">
+            <div class="card h-100" (click)="getVenueById(item?.id)">
+                <ng-container *ngIf="item?.images?.length>0; else defaultimage">
+                    <img onerror="this.src='../assets/tech.jpg'" [src]="item?.images[0]?.url" class="card-img-top">
+                </ng-container>
+                <ng-template #defaultimage>
+                    <img src="../assets/tech.jpg" class="card-img-top">
+                </ng-template>
+                <div class="card-body">
+                    <h6 class="card-title"><b>{{item?.name}}</b></h6>
+                </div>
+            </div>
+        </div>
+    </div>
+  
+  
+  
+  
+  
+  <!-- Modal details -->
+  <div class="modal fade" id="details" tabindex="-1" aria-labelledby="detailsLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="detailsLabel">Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center">
+                    <img *ngIf="showDetail?.images?.length > 0; else other" [src]="showDetail?.images[0]?.url" class="modal-img img-fluid rounded" alt="Detail Image">
+                    <ng-template #other>
+                        <img src="../assets/tech.jpg" class="img-fluid rounded" alt="Default Image">
+                    </ng-template>
+                </div>
+                <h3 class="text-center mt-3">{{showDetail?.name}}</h3>
+                <div class="px-4 py-2">
+                    <ng-container *ngIf="showDetail?.type=='event'">
+                        <p><strong>Start Date:</strong> {{showDetail?.dates?.start?.localDate}}</p>
+                        <p><strong>Venue:</strong> {{showDetail?._embedded?.venues[0]?.address?.line1}}, {{showDetail?._embedded?.venues[0]?.city?.name}}, {{showDetail?._embedded?.venues[0]?.country?.name}}</p>
+                    </ng-container>
+                    <ng-container *ngIf="showDetail?.type=='attraction'">
+                        <p><strong>Start Date:</strong> {{showDetail?.dates?.start?.localDate}}</p>
+                        <p><strong>Classifications:</strong> Genre: {{showDetail?.classifications[0]?.genre?.name}}, Segment: {{showDetail?.classifications[0]?.segment?.name}}, Sub-Genre: {{showDetail?.classifications[0]?.subGenre?.name}}</p>
+                    </ng-container>
+                    <ng-container *ngIf="showDetail?.type=='venue'">
+                        <p><strong>Start Date:</strong> {{showDetail?.dates?.start?.localDate}}</p>
+                        <p><strong>Address:</strong> {{showDetail?.address?.line1}}, {{showDetail?.city?.name}}, {{showDetail?.country?.name}}</p>
+                        <p><strong>Parking Detail:</strong> {{showDetail?.parkingDetail}}</p>
+                        <p><strong>Accessible Detail:</strong> {{showDetail?.accessibleSeatingDetail}}</p>
+                    </ng-container>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-info btn-sm" *ngIf="authService.isAuthenticated()" (click)="addToFavourites(showDetail)">Add to Favourites</button>
+                <ng-container *ngIf="showDetail?.url">
+                    <a [href]="showDetail?.url" target="_blank"><button class="btn btn-primary btn-sm">View URL</button></a>
+                </ng-container>
+                <ng-container *ngIf="showDetail?.type=='event'">
+                    <a [href]="showDetail?.seatmap?.staticUrl" target="_blank"><button class="btn btn-primary btn-sm">View Seat Map</button></a>
+                </ng-container>
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+  
+  <!-- login details -->
+  <div class="modal fade" id="auth" tabindex="-1" aria-labelledby="authLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+  
+  
+        <div class="modal-header">
+          <h5 class="modal-title" id="authLabel" *ngIf="!authService.isAuthenticated() && checkAuthModal">Login</h5>
+          <h5 class="modal-title" id="authLabel" *ngIf="!authService.isAuthenticated() && !checkAuthModal">Register</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" *ngIf="!authService.isAuthenticated() && checkAuthModal">
+          <form [formGroup]="loginForm">
+            <div class="form-group">
+              <label for="email"><i class="fa-solid fa-user pe-1"></i> Username</label>
+              <input type="text" class="form-control" formControlName="email" id="email" placeholder="Enter email">
+            </div>
+            <div class="form-group my-3">
+              <label for="password"><i class="fa-solid fa-key pe-1"></i> Password</label>
+              <input type="password" class="form-control" id="password" formControlName="password"
+                placeholder="Enter password">
+            </div>
+            <!--   <div class="checkbox">
+            <label><input type="checkbox" value="" checked>Remember me</label>
+          </div> -->
+            <button type="button" class="btn btn-success btn-block w-50" data-bs-dismiss="modal" (click)="login()">
+              Login</button>
+          </form>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="registerForm">
+            <div class="form-group">
+              <label for="email"><i class="fa-solid fa-user pe-1"></i> Email</label>
+              <input type="text" class="form-control" id="email" formControlName="email" placeholder="Enter email">
+            </div>
+            <div class="form-group my-3">
+              <label for="password"><i class="fa-solid fa-key pe-1"></i> Password</label>
+              <input type="password" class="form-control" id="password" formControlName="password"
+                placeholder="Enter password">
+            </div>
+            <!--   <div class="checkbox">
+            <label><input type="checkbox" value="" checked>Remember me</label>
+          </div> -->
+            <button type="button" class="btn btn-success btn-block w-50" data-bs-dismiss="modal" (click)="register()">
+              Register</button>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <!--   <button type="button" class="btn btn-primary">Login</button> -->
+        </div>
+  
+      </div>
+    </div>
+  </div>
+  

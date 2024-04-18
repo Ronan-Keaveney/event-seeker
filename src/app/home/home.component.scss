@@ -1,0 +1,103 @@
+.card {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease;
+}
+
+.card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.card-img-top {
+    height: 160px;
+    object-fit: cover;
+}
+
+.btn-outline-primary, .btn-outline-secondary {
+    width: auto;
+}
+
+.container-fluid {
+    padding-bottom: 4rem;
+}
+
+.modal-content {
+    border-radius: 0.5rem;
+}
+
+.modal-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.modal-title {
+    color: #495057;
+}
+
+.modal-body {
+    line-height: 1.6;
+    color: #495057;
+}
+
+.modal-img {
+    max-height: 300px;
+    object-fit: cover;
+}
+
+.modal-footer {
+    background-color: #f8f9fa;
+    border-top: 1px solid #dee2e6;
+}
+
+.btn-info {
+    color: #fff;
+    background-color: #17a2b8;
+    border-color: #17a2b8;
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.btn-secondary {
+    color: #fff;
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+
+.modal-content {
+    border-radius: 0.3rem;
+}
+
+.modal-header, .modal-footer {
+    background-color: #f5f5f5;
+    border-color: #dee2e6;
+}
+
+.modal-title {
+    color: #333;
+}
+
+.form-label {
+    font-weight: bold;
+}
+
+.btn-success {
+    background-color: #28a745;
+    border-color: #28a745;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+
+.form-control {
+    border-radius: 0.25rem;
+    box-shadow: none;
+}
+
+.modal-body {
+    overflow-y: auto;
+}
